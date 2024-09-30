@@ -1,0 +1,113 @@
+Sub MergeExcelFiles()
+    Dim fnameCurFile As Variant
+    Dim countFiles As Integer
+    Dim countSheets As Integer
+    Dim wksCurSheet As Worksheet
+    Dim wbkCurBook As Workbook
+    Dim wbkSrcBook As Workbook
+    Dim newSheetName As String
+    Dim filePath As String
+    Dim line As String
+    Dim fileNum As Integer
+
+    ' Specify the path to the txt file containing the Excel file paths
+    filePath = "path\table-list.txt" ' Change this to your actual file path
+
+    ' Open the text file for reading
+    fileNum = FreeFile
+    Open filePath For Input As #fileNum
+
+    ' Read the Excel file paths from the text file
+    Dim fileList As Collection
+    Set fileList = New Collection
+    
+    ' Loop to read lines from the text file
+    Do While Not EOF(fileNum)
+        Line Input #fileNum, line
+        If Trim(line) <> "" Then ' Ignore empty lines
+            fileList.Add line
+        End If
+    Loop
+
+    Close #fileNum
+
+    If fileList.Count > 0 Then
+        countFiles = 0
+        countSheets = 0
+        
+        Application.ScreenUpdating = False
+        Application.Calculation = xlCalculationManual
+
+        Set wbkCurBook = ActiveWorkbook
+        
+        For Each fnameCurFile In fileList
+            countFiles = countFiles + 1
+
+            ' Debug: Output the current file being processed
+            Debug.Print "Processing file: " & fnameCurFile
+            
+            Dim fileName As String
+            fileName = Mid(fnameCurFile, InStrRev(fnameCurFile, "\") + 1)
+            fileName = Left(fileName, InStrRev(fileName, ".") - 1)
+
+            ' Open the source workbook
+            On Error Resume Next ' Temporarily ignore errors
+            Set wbkSrcBook = Workbooks.Open(fileName:=fnameCurFile)
+            If Err.Number <> 0 Then
+                MsgBox "Error opening file: " & fnameCurFile & vbCrLf & "Error: " & Err.Description, vbExclamation
+                Err.Clear
+            End If
+            On Error GoTo 0 ' Resume normal error handling
+
+            If Not wbkSrcBook Is Nothing Then
+                ' Create a new sheet name by combining file name and original sheet name
+                For Each wksCurSheet In wbkSrcBook.Sheets
+                    newSheetName = fileName & "_" & wksCurSheet.Name
+                    
+                    wksCurSheet.Copy after:=wbkCurBook.Sheets(wbkCurBook.Sheets.Count)
+                    wbkCurBook.Sheets(wbkCurBook.Sheets.Count).Name = newSheetName
+                    countSheets = countSheets + 1
+                Next wksCurSheet
+                
+                wbkSrcBook.Close SaveChanges:=False
+            Else
+                MsgBox "Could not open file: " & fnameCurFile, vbExclamation
+            End If
+
+        Next fnameCurFile
+
+        ' Call the function to delete empty sheets
+        DeleteEmptySheets
+        
+        Application.ScreenUpdating = True
+        Application.Calculation = xlCalculationAutomatic
+
+        MsgBox "Processed " & countFiles & " files" & vbCrLf & "Merged " & countSheets & " worksheets", Title:="Merge Excel files"
+    Else
+        MsgBox "No files found in the text file", Title:="Merge Excel files"
+    End If
+End Sub
+
+Sub DeleteEmptySheets()
+    Dim ws As Worksheet
+    Dim sheetsToDelete As Collection
+    Set sheetsToDelete = New Collection
+
+    ' Loop through each sheet in the active workbook
+    For Each ws In ActiveWorkbook.Sheets
+        ' Check if the sheet is empty (no data)
+        If Application.WorksheetFunction.CountA(ws.Cells) = 0 Then
+            sheetsToDelete.Add ws
+        End If
+    Next ws
+
+    ' Delete the empty sheets
+    Dim sheet As Worksheet
+    On Error Resume Next ' Ignore errors if sheets don't exist
+    For Each sheet In sheetsToDelete
+        sheet.Delete
+    Next sheet
+    On Error GoTo 0 ' Resume normal error handling
+End Sub
+
+
