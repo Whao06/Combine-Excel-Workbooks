@@ -77,10 +77,10 @@ Sub MergeExcelFiles()
             End If
 
         Next fnameCurFile
-
+        
         ' Call the function to delete empty sheets
         DeleteEmptySheets
-        
+
         Application.ScreenUpdating = True
         Application.Calculation = xlCalculationAutomatic
 
@@ -121,4 +121,3 @@ Sub DeleteEmptySheets()
     Next sheet
     On Error GoTo 0 ' Resume normal error handling
 End Sub
-
