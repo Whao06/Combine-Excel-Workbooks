@@ -43,9 +43,6 @@ Sub MergeExcelFiles()
         For Each fnameCurFile In fileList
             countFiles = countFiles + 1
 
-            ' Debug: Output the current file being processed
-            Debug.Print "Processing file: " & fnameCurFile
-            
             Dim fileName As String
             fileName = Mid(fnameCurFile, InStrRev(fnameCurFile, "\") + 1)
             fileName = Left(fileName, InStrRev(fileName, ".") - 1)
