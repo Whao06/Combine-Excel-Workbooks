@@ -14,7 +14,7 @@
 8. Close Visual Basic Editor. <br>
 9. In the excel file, press <b>ALT + F8</b> to see the Macro Window. <br>
 10. Select and run the merging macro. <br>
-11. Click <b>Delete</b>b> until the pop-up window disappear. <br>
+11. Click <b>Delete</b> until the pop-up window disappear. <br>
 
 <h2>References</h2>
 <ul>
