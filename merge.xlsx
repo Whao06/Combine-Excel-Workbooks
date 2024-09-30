@@ -11,7 +11,7 @@ Sub MergeExcelFiles()
     Dim fileNum As Integer
 
     ' Specify the path to the txt file containing the Excel file paths
-    filePath = "path\table-list.txt" ' Change this to your actual file path
+    filePath = "C:\Users\A63\Documents\Excel\table-list.txt" ' Change this to your actual file path
 
     ' Open the text file for reading
     fileNum = FreeFile
@@ -42,7 +42,7 @@ Sub MergeExcelFiles()
         
         For Each fnameCurFile In fileList
             countFiles = countFiles + 1
-
+            
             Dim fileName As String
             fileName = Mid(fnameCurFile, InStrRev(fnameCurFile, "\") + 1)
             fileName = Left(fileName, InStrRev(fileName, ".") - 1)
@@ -61,9 +61,14 @@ Sub MergeExcelFiles()
                 For Each wksCurSheet In wbkSrcBook.Sheets
                     newSheetName = fileName & "_" & wksCurSheet.Name
                     
-                    wksCurSheet.Copy after:=wbkCurBook.Sheets(wbkCurBook.Sheets.Count)
-                    wbkCurBook.Sheets(wbkCurBook.Sheets.Count).Name = newSheetName
-                    countSheets = countSheets + 1
+                    ' Check if a sheet with the new name already exists
+                    If Not SheetExists(newSheetName, wbkCurBook) Then
+                        wksCurSheet.Copy after:=wbkCurBook.Sheets(wbkCurBook.Sheets.Count)
+                        wbkCurBook.Sheets(wbkCurBook.Sheets.Count).Name = newSheetName
+                        countSheets = countSheets + 1
+                    Else
+                        Debug.Print "Sheet already exists, skipping: " & newSheetName
+                    End If
                 Next wksCurSheet
                 
                 wbkSrcBook.Close SaveChanges:=False
@@ -84,6 +89,16 @@ Sub MergeExcelFiles()
         MsgBox "No files found in the text file", Title:="Merge Excel files"
     End If
 End Sub
+
+Function SheetExists(sheetName As String, Optional ByVal wb As Workbook = Nothing) As Boolean
+    Dim ws As Worksheet
+    If wb Is Nothing Then Set wb = ActiveWorkbook
+    On Error Resume Next
+    Set ws = wb.Sheets(sheetName)
+    On Error GoTo 0
+
+    SheetExists = Not ws Is Nothing
+End Function
 
 Sub DeleteEmptySheets()
     Dim ws As Worksheet
@@ -106,5 +121,4 @@ Sub DeleteEmptySheets()
     Next sheet
     On Error GoTo 0 ' Resume normal error handling
 End Sub
-
 
