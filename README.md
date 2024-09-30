@@ -1,4 +1,5 @@
 # Combine-Excel-Workbooks
+This program will combine multiple Excel files or csv files together into a single Excel workbook. It will also delete any empty sheets with no data.<br>
 <h2>Merging Excel Files into One Excel File</h2>
 1. Prepare a new text file with the name <b>table-list</b> and have the path of the excel files that need to be merged as shown below:
 <br><br>
