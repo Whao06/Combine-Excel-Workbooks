@@ -8,7 +8,7 @@
 <br>
 3. In a new excel file, press <b>ALT + F11</b> to open Visual Basic Editor. <br>
 4. Right-click <b>ThisWorkbook</b> and select insert module. <br>
-5. Use the code at <b>merge.xlsx</b>. <br>
+5. Use the code at <b>merge.xlsm</b>. <br>
 6. Press <b>CTRL + S</b> and save as <b>Excel macro-enabled workbook</b>. <br>
 7. Press <b>"NO"</b> if there is warning dialog. <br>
 8. Close Visual Basic Editor. <br>
