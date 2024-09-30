@@ -11,7 +11,7 @@ Sub MergeExcelFiles()
     Dim fileNum As Integer
 
     ' Specify the path to the txt file containing the Excel file paths
-    filePath = "C:\Users\A63\Documents\Excel\table-list.txt" ' Change this to your actual file path
+    filePath = "path\table-list.txt" ' Change this to your actual file path
 
     ' Open the text file for reading
     fileNum = FreeFile
