@@ -16,8 +16,18 @@
 10. Select and run the merging macro. <br>
 11. Click <b>Delete</b> until the pop-up window disappear. <br>
 
+<h2> Notes </h2>
+1. The <b>DELETE</b> function will remove empty sheets with no data inside.<br>
+2. You can add the following code under <b>"This Workbook"</b> to have the macro run everytime you open the excel file:<br>
+
+```
+Private Sub Workbook_Open()
+    Call MergeExcelFiles
+End Sub
+```
 <h2>References</h2>
 <ul>
         <li>https://www.ablebits.com/office-addins-blog/merge-multiple-excel-files-into-one/ </li>
         <li>https://github.com/tinyheero/merge-excel-workbooks</li>
 </ul>
+
